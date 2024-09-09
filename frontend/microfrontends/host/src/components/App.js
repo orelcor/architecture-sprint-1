@@ -32,7 +32,7 @@ function App() {
   const [tooltipStatus, setTooltipStatus] = React.useState("");
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  //В компоненты добавлены новые стейт-переменные: email — в компонент App
+  // В компоненты добавлены новые стейт-переменные: email — в компонент App
   const [email, setEmail] = React.useState("");
 
   const history = useHistory();

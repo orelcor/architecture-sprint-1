@@ -41,22 +41,3 @@ services:
       start_period: 15s 
       retries: 5 
       test: node healthcheck.js
-
-  frontend-test:
-    build:
-      context: frontend
-      dockerfile: ../Dockerfile.frontend
-    command: yarn test:microfrontend
-    restart: 'no'
-    environment:
-          CI: true
-
-  frontend:
-    build:
-      context: frontend
-      dockerfile: ../Dockerfile.frontend
-    ports:
-      - 3000:3000
-    depends_on:
-      backend:
-        condition: service_healthy

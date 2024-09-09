@@ -1,19 +1,49 @@
-import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Route, Link, useHistory } from 'react-router-dom';
 import logoPath from '../images/logo.svg';
+import * as auth from "../utils/auth_api";
+import "../index.css"
 
-// В корневом компоненте App описаны обработчики: onRegister, onLogin и onSignOut. Эти обработчики переданы в соответствующие компоненты: Register.js, Login.js, Header.js
-function Header ({onSignOut, email }) {
-  function handleSignOut(){
-    onSignOut();
-  }
+
+function Header () {
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [email, setEmail] = useState("No email set");
+    const history = useHistory();
+
+    useEffect(() => {
+        const token = localStorage.getItem("jwt");
+        if (token) {
+            auth
+                .checkToken(token)
+                .then((res) => {
+                    setEmail(res.data.email);
+                    setIsLoggedIn(true);
+                    history.push("/");
+                })
+                .catch((err) => {
+                    localStorage.removeItem("jwt");
+                    console.log(err);
+                });
+        }
+    }, [history]);
+
+    function onSignOut() {
+        // при вызове обработчика onSignOut происходит удаление jwt
+        localStorage.removeItem("jwt");
+        setIsLoggedIn(false);
+        // После успешного вызова обработчика onSignOut происходит редирект на /signin
+        history.push("/signin");
+    }
+
   return (
+
     <header className="header page__section">
-      <img src={logoPath} alt="Логотип проекта Mesto" className="logo header__logo" />
-      <Route exact path="/">
+        <img src={logoPath} alt="Логотип проекта Mesto" className="logo header__logo" />
+        <Route exact path="/">
         <div className="header__wrapper">
           <p className="header__user">{ email }</p>
-          <button className="header__logout" onClick={handleSignOut}>Выйти</button>
+          <button className="header__logout" onClick={onSignOut}>Выйти</button>
         </div>
       </Route>
       <Route path="/signup">

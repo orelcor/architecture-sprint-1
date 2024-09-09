@@ -57,6 +57,22 @@ module.exports = (_, argv) => ({
           loader: "babel-loader",
         },
       },
+
+
+         {
+          test: /\.(svg)$/,
+          // only process modules with this loader
+          // if they live under a 'fonts' or 'pficon' directory
+          use: {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            }
+          }
+        },
+
+
+
     ],
   },
 
@@ -65,7 +81,9 @@ module.exports = (_, argv) => ({
       name: "auth",
       filename: "remoteEntry.js",
       remotes: {},
-      exposes: {},
+      exposes: {
+        "./Header": "./src/components/Header.js"
+      },
       shared: {
         ...deps,
         react: {
